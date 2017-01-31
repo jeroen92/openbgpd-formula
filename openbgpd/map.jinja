@@ -1,0 +1,45 @@
+{% macro sls_block(dict) %}
+    {% for key, value in dict.items() %}
+    - {{ key }}: {{ value|json() }}
+    {% endfor %}
+{% endmacro %}
+
+{% set openbgpd = salt['pillar.get']('openbgpd', {
+    'lookup': salt['grains.filter_by']({
+        'FreeBSD': {
+            'package': 'openbgpd',
+            'service': 'openbgpd',
+            'user': '_bgpd',
+            'conf_file': '/usr/local/etc/bgpd.conf',
+        },
+    }, default='Debian' ),
+    'package': {
+        'opts': {},
+    },
+    'service': {
+        'enable': True,
+        'opts': {},
+    },
+    'server': {
+        'opts': {},
+        'config': {
+            'AS': 65534,
+            'connect-retry': 120,
+            'fib-update': 'yes',
+        },
+        'rdomains': {},
+        'neighbors': {},
+        'groups': {},
+    },
+    'servers': {
+        'disabled_postfix': '.disabled',
+        'symlink_opts': {},
+        'rename_opts': {},
+        'managed_opts': {},
+        'dir_opts': {
+            'makedirs': True,
+        },
+        'managed': {},
+    },
+}, merge=True) %}
+

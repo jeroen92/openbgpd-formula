@@ -1,0 +1,11 @@
+openbgpd:
+  server:
+    config:
+      AS: 65000
+      log: updates
+    neighbor 192.168.200.21:
+      descr: 'dmz-egprouter-01'
+      remote-as: '65000'
+    neighbor 192.168.205.60:
+      descr: 'dmz-egprouter-02'
+      remote-as: '65000'
